@@ -1,4 +1,4 @@
-function removeSeams(img, num, obj, Gimg)
+function removeSeams_col(img, num, obj, Gimg)
 	%remove num of seams in img
 	%if obj is true
 	% the energymap will be Gimg
