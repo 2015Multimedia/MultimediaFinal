@@ -33,9 +33,8 @@ vector = zeros(rmax, 1);
 
 	minval=min(test2(rmax,:));
 	locations=find(test2(rmax,:)==minval);
-	[x,y]=size(locations);
+	[~, loc]=size(locations);
 	%back traking to find the seam
-		for loc=1:y
 		j = locations(1,loc);
 		for row=rmax:-1:2
 			if row==rmax
@@ -128,7 +127,6 @@ vector = zeros(rmax, 1);
 					end
 				end
 			%end
-		end
 	end
 %imshow(ImgOut);
 %imshow(I);
