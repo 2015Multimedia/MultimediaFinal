@@ -13,4 +13,5 @@ some examples:
 4. let user specify object (where the energy will be max) and insert 100 seams
 	[Gimg, ~] = identifyObject(img, true);
 	insertSeam(img, 100, true, Gimg);
-	
+5. let user specify object to be delete:
+	removeObject(img);

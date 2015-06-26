@@ -9,8 +9,10 @@ function [Gimg, M] = identifyObject(img, SetMax)
 	
 	%get user input
 	imshow(img);
-	[PointX, PointY] = ginput(200);
+	[PointX, PointY] = ginput;
 	PointList = [PointX PointY];
+	len = size(PointX);
+	%PointList(len+1) = PointList(1);
 	
 	%create points inside polygon
 	[row, col, ~] = size(img);
@@ -31,10 +33,15 @@ function [Gimg, M] = identifyObject(img, SetMax)
 			yCoord = imgXYList(pixI,2);
 			%set energy here
 			if SetMax
-				Gimg(xCoord, yCoord) = realmax;
+				Gimg(yCoord, xCoord) = realmax;
+				img(yCoord, xCoord, :) = [0 0 0];
 			else
-				Gimg(xCoord, yCoord) = M;	
+				Gimg(yCoord, xCoord) = M;
+				img(yCoord, xCoord, :) = [0 0 0];
+				
 			end
 		end
 	end
+	
+	imwrite(img, 'Object.png');
 end
