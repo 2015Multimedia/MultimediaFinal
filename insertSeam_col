@@ -1,0 +1,88 @@
+function insertSeam_col(img, num, obj, Gimg)
+	%insert num of seams to img
+	%if obj is true
+	% the energymap will be Gimg
+	% otherwise calculate the energy map
+	
+	img2 = img;
+	[rmax, cmax, t] = size(img);
+	vec = zeros(cmax, num);
+	add = zeros(cmax, num);
+	% find num seams
+	if not(obj)
+		for i=1:num
+			%delete seams
+			Gimg = getEnergy(img2);
+			tmp = FindSeam(img2, Gimg);
+			img2 = DeleteSeam(tmp, img2);
+			
+			% align vector
+		
+			vec(:,i) = tmp;
+			for y=1:cmax
+				c = 0;
+				for x=1:i-1
+					if vec(y,x)<=vec(y,i)
+						c = c+1;
+					end
+				end
+				add(y,i) = c;
+			end
+		end
+	else
+		
+		for i=1:num
+			%delete seams
+			tmp = FindSeam(img2, Gimg);
+			img2 = DeleteSeam(tmp, img2);
+			Gimg = DeleteSeam(tmp, Gimg);
+			
+			% align vector
+		
+			vec(:,i) = tmp;
+			for y=1:cmax
+				c = 0;
+				for x=1:i-1
+					if vec(y,x)<=vec(y,i)
+						c = c+1;
+					end
+				end
+				add(y,i) = c;
+			end
+		end
+	end
+	for i=1:num
+		for y=1:cmax
+			vec(y,i) = vec(y,i)+add(y,i);
+		end
+	end
+	
+	% insert seams
+	for i=1:num
+		for col=1:cmax
+			
+			[row, index] = max(vec(col, :));
+			if row<rmax
+				img(row+2:rmax+1, col,:) = img(row+1:rmax, col,:);
+			end
+			if row>1 && row < rmax
+				img(row+1, col,1) = sum([img(row-1, col,1), img(row, col,1), img(row+1, col,1)]) / 3;
+				img(row+1, col,2) = sum([img(row-1, col,2), img(row, col,2), img(row+1, col,2)]) / 3;
+				img(row+1, col,3) = sum([img(row-1, col,3), img(row, col,3), img(row+1, col,3)]) / 3;
+			elseif row ==1
+				img(row+1, col,1) = sum([img(row, col,1), img(row+1, col,1)]) / 2;
+				img(row+1, col,2) = sum([img(row, col,2), img(row+1, col,2)]) / 2;
+				img(row+1, col,3) = sum([img(row, col,3), img(row+1, col,3)]) / 2;
+			else
+				img(row+1, col,1) = sum([img(row-1, col,1), img(row, col,1)]) / 2;
+				img(row+1, col,2) = sum([img(row-1, col,2), img(row, col,2)]) / 2;
+				img(row+1, col,3) = sum([img(row-1, col,3), img(row, col,3)]) / 2;
+			end
+			
+			vec(col, index) = realmin;
+			
+		end
+		rmax = rmax + 1;
+	end
+	imwrite(img, 'insert.png');
+end
