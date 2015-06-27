@@ -24,5 +24,6 @@ function removeSeams(img, rnum, cnum, obj, Gimg)
 			Gimg = DeleteSeam(vec, Gimg);
 		end
 	end
+	imshow(img);
 	imwrite(img, 'remove.png');
 end
