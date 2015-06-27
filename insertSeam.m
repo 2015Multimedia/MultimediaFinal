@@ -84,5 +84,6 @@ function insertSeam(img, num, obj, Gimg)
 		end
 		cmax = cmax + 1;
 	end
+	imshow(img);
 	imwrite(img, 'insert.png');
 end
