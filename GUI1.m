@@ -22,7 +22,7 @@ function varargout = GUI1(varargin)
 
 % Edit the above text to modify the response to help GUI1
 
-% Last Modified by GUIDE v2.5 28-Jun-2015 03:51:55
+% Last Modified by GUIDE v2.5 28-Jun-2015 23:24:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -101,19 +101,36 @@ handles.current_data = img;
 set(handles.edit3,'String', w);
 set(handles.edit4,'String', h);
 
+set(handles.slider1,'Max', w*1.5);
+set(handles.slider1,'Min', w/2);
+set(handles.slider1,'Value', w);
+step = 1/(w*1.5 - w/2);
+set(handles.slider1,'SliderStep', [step step]);
+
+
+set(handles.slider2,'Max', h*1.5);
+set(handles.slider2,'Min', h/2);
+set(handles.slider2,'Value', h);
+step = 1/(h*1.5 - h/2);
+set(handles.slider2,'SliderStep', [step step]);
+
 
 %save original size
 handles.currentwidth = w;
 handles.currentheight = h;
 
+
+
+%set image in axes size
 w = w/5;
 h = h/5;
 set(handles.axes1,'Position', [12 25 w h]);
 axes(handles.axes1);
 
-%
+%disable obj flag
 global obj;
 obj = false;
+
 guidata(hObject,handles);
 
 function edit1_Callback(hObject, eventdata, handles)
@@ -323,8 +340,10 @@ if (get(hObject,'Value') == get(hObject,'Max'))
     obj = true;
     img = handles.current_data;
     [Gimg, ~] = identifyObject(img, true);
+    set(hObject, 'BackgroundColor',[0 1 1])
 else
     obj = false;
+    set(hObject, 'BackgroundColor',[0.941 0.941 0.941])
 end
 
 
@@ -347,3 +366,111 @@ function axes1_CreateFcn(hObject, eventdata, handles)
 
 % Hint: place code in OpeningFcn to populate axes1
 set(gcf, 'PaperPositionMode', 'auto');
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+w = handles.currentwidth;
+w1 = round(get(hObject,'Value'))
+global obj;
+global Gimg;
+%save image to handles
+img = handles.current_data;
+if w1 < w
+    removeSeams(img, abs(w-w1), obj, Gimg);
+    img = imread('remove.png');
+elseif w1 > w
+    insertSeam(img, abs(w1-w), obj, Gimg);
+    img = imread('insert.png');
+end
+
+%save image
+
+handles.current_data = img;
+[h, w, ~] = size(img);
+
+%save size of textarea
+handles.currentwidth = w;
+
+set(handles.edit3,'String', w);
+
+w = w/5;
+h = h/5;
+set(handles.axes1,'Position', [12 25 w h]);
+axes(handles.axes1);
+
+
+guidata(hObject,handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider2_Callback(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+h = handles.currentheight;
+h1 = round(get(hObject,'Value'))
+global obj;
+global Gimg;
+%save image to handles
+img = handles.current_data;
+if h1 < h
+    removeSeams_col(img, abs(h-h1), obj, Gimg);
+    img = imread('remove.png');
+elseif h1 > h
+    insertSeam_col(img, abs(h1-h), obj, Gimg);
+    img = imread('insert.png');
+end
+
+%save image
+
+handles.current_data = img;
+[h, w, ~] = size(img);
+
+%save size of textarea
+handles.currentheight = h;
+
+set(handles.edit4,'String', h);
+
+w = w/5;
+h = h/5;
+set(handles.axes1,'Position', [12 25 w h]);
+axes(handles.axes1);
+
+
+guidata(hObject,handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function slider2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
