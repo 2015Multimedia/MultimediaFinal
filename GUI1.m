@@ -131,6 +131,7 @@ axes(handles.axes1);
 global obj;
 obj = false;
 
+set(handles.axes1,'Visible', 'on');
 guidata(hObject,handles);
 
 function edit1_Callback(hObject, eventdata, handles)
@@ -378,7 +379,7 @@ function slider1_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
 w = handles.currentwidth;
-w1 = round(get(hObject,'Value'))
+w1 = round(get(hObject,'Value'));
 global obj;
 global Gimg;
 %save image to handles
@@ -432,7 +433,7 @@ function slider2_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
 h = handles.currentheight;
-h1 = round(get(hObject,'Value'))
+h1 = round(get(hObject,'Value'));
 global obj;
 global Gimg;
 %save image to handles
