@@ -1,3 +1,7 @@
+use GUI to run
+
+
+%{
 use imread to read image first
 e.g.
 	img = imread('.png');
@@ -15,3 +19,4 @@ some examples:
 	insertSeam(img, 100, true, Gimg);
 5. let user specify object to be delete:
 	removeObject(img);
+}%
